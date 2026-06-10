@@ -1,0 +1,502 @@
+[
+  {
+    "nume": "colegiul national gheorghe lazar",
+    "siiir": "4061103134",
+    "medieBac": 9.55,
+    "medieAdm": 9.62,
+    "rataPromovare": 100,
+    "numCandidati": 246,
+    "hasMap": false,
+    "rank": 1
+  },
+  {
+    "nume": "liceul international ioanid",
+    "siiir": "4061205835",
+    "medieBac": 9.41,
+    "medieAdm": null,
+    "rataPromovare": 100,
+    "numCandidati": 3,
+    "hasMap": false,
+    "rank": 2
+  },
+  {
+    "nume": "colegiul national de informatica tudor vianu",
+    "siiir": "4061101408",
+    "medieBac": 9.4,
+    "medieAdm": 9.62,
+    "rataPromovare": 100,
+    "numCandidati": 244,
+    "hasMap": false,
+    "rank": 3
+  },
+  {
+    "nume": "colegiul national sfantul sava",
+    "siiir": "4061103541",
+    "medieBac": 9.39,
+    "medieAdm": 9.6,
+    "rataPromovare": 100,
+    "numCandidati": 216,
+    "hasMap": false,
+    "rank": 4
+  },
+  {
+    "nume": "liceul pedagogic anastasia popescu",
+    "siiir": "4061204721",
+    "medieBac": 9.33,
+    "medieAdm": null,
+    "rataPromovare": 100,
+    "numCandidati": 6,
+    "hasMap": false,
+    "rank": 5
+  },
+  {
+    "nume": "complexul educational laude reut",
+    "siiir": "4061204807",
+    "medieBac": 9.32,
+    "medieAdm": null,
+    "rataPromovare": 100,
+    "numCandidati": 37,
+    "hasMap": false,
+    "rank": 6
+  },
+  {
+    "nume": "colegiul national bilingv george cosbuc",
+    "siiir": "4061100217",
+    "medieBac": 9.27,
+    "medieAdm": 9.3,
+    "rataPromovare": 100,
+    "numCandidati": 172,
+    "hasMap": false,
+    "rank": 7
+  },
+  {
+    "nume": "colegiul national spiru haret",
+    "siiir": "4061101851",
+    "medieBac": 9.21,
+    "medieAdm": 9.52,
+    "rataPromovare": 99.5,
+    "numCandidati": 216,
+    "hasMap": false,
+    "rank": 8
+  },
+  {
+    "nume": "colegiul national grigore moisil",
+    "siiir": "4061103419",
+    "medieBac": 9.19,
+    "medieAdm": 9.25,
+    "rataPromovare": 100,
+    "numCandidati": 186,
+    "hasMap": false,
+    "rank": 9
+  },
+  {
+    "nume": "liceul teoretic scoala europeana bucuresti",
+    "siiir": "4061205265",
+    "medieBac": 9.15,
+    "medieAdm": null,
+    "rataPromovare": 100,
+    "numCandidati": 15,
+    "hasMap": false,
+    "rank": 10
+  },
+  {
+    "nume": "colegiul national mihai viteazul",
+    "siiir": "4061101688",
+    "medieBac": 9.11,
+    "medieAdm": 9.4,
+    "rataPromovare": 100,
+    "numCandidati": 269,
+    "hasMap": false,
+    "rank": 11
+  },
+  {
+    "nume": "colegiul national matei basarab",
+    "siiir": "4061103012",
+    "medieBac": 9.08,
+    "medieAdm": 9.42,
+    "rataPromovare": 100,
+    "numCandidati": 232,
+    "hasMap": false,
+    "rank": 12
+  },
+  {
+    "nume": "colegiul national ion creanga",
+    "siiir": "4061103265",
+    "medieBac": 9.05,
+    "medieAdm": 9.2,
+    "rataPromovare": 100,
+    "numCandidati": 225,
+    "hasMap": false,
+    "rank": 13
+  },
+  {
+    "nume": "colegiul national gheorghe sincai",
+    "siiir": "4061101756",
+    "medieBac": 9.05,
+    "medieAdm": 9.35,
+    "rataPromovare": 99.6,
+    "numCandidati": 249,
+    "hasMap": false,
+    "rank": 14
+  },
+  {
+    "nume": "liceul teoretic scoala mea",
+    "siiir": "4061204273",
+    "medieBac": 9.04,
+    "medieAdm": null,
+    "rataPromovare": 100,
+    "numCandidati": 9,
+    "hasMap": false,
+    "rank": 15
+  },
+  {
+    "nume": "colegiul national i l caragiale",
+    "siiir": "4061103306",
+    "medieBac": 8.92,
+    "medieAdm": 9.17,
+    "rataPromovare": 99.6,
+    "numCandidati": 277,
+    "hasMap": false,
+    "rank": 16
+  },
+  {
+    "nume": "colegiul national elena cuza",
+    "siiir": "4061100167",
+    "medieBac": 8.89,
+    "medieAdm": 9.07,
+    "rataPromovare": 100,
+    "numCandidati": 170,
+    "hasMap": false,
+    "rank": 17
+  },
+  {
+    "nume": "colegiul national iulia hasdeu",
+    "siiir": "4061102341",
+    "medieBac": 8.85,
+    "medieAdm": 8.6,
+    "rataPromovare": 97.5,
+    "numCandidati": 239,
+    "hasMap": false,
+    "rank": 18
+  },
+  {
+    "nume": "liceul teoretic nicolae iorga",
+    "siiir": "4061101774",
+    "medieBac": 8.83,
+    "medieAdm": 9.12,
+    "rataPromovare": 100,
+    "numCandidati": 166,
+    "hasMap": false,
+    "rank": 19
+  },
+  {
+    "nume": "liceul teoretic alexandru ioan cuza",
+    "siiir": "4061102576",
+    "medieBac": 8.8,
+    "medieAdm": 9.12,
+    "rataPromovare": 99.1,
+    "numCandidati": 229,
+    "hasMap": false,
+    "rank": 20
+  },
+  {
+    "nume": "colegiul national cantemir voda",
+    "siiir": "4061103455",
+    "medieBac": 8.78,
+    "medieAdm": 9.35,
+    "rataPromovare": 97.7,
+    "numCandidati": 129,
+    "hasMap": false,
+    "rank": 21
+  },
+  {
+    "nume": "liceul teoretic international de informatica bucuresti",
+    "siiir": "4061204766",
+    "medieBac": 8.76,
+    "medieAdm": null,
+    "rataPromovare": 98.8,
+    "numCandidati": 166,
+    "hasMap": false,
+    "rank": 22
+  },
+  {
+    "nume": "colegiul national mihai eminescu",
+    "siiir": "4061103274",
+    "medieBac": 8.71,
+    "medieAdm": 9.15,
+    "rataPromovare": 99.5,
+    "numCandidati": 217,
+    "hasMap": false,
+    "rank": 23
+  },
+  {
+    "nume": "liceul romano finlandez",
+    "siiir": "4061205699",
+    "medieBac": 8.66,
+    "medieAdm": null,
+    "rataPromovare": 100,
+    "numCandidati": 35,
+    "hasMap": false,
+    "rank": 24
+  },
+  {
+    "nume": "colegiul economic virgil madgearu",
+    "siiir": "4061101046",
+    "medieBac": 8.57,
+    "medieAdm": 8.8,
+    "rataPromovare": 98.9,
+    "numCandidati": 275,
+    "hasMap": false,
+    "rank": 25
+  },
+  {
+    "nume": "liceul teoretic jean monnet",
+    "siiir": "4061101209",
+    "medieBac": 8.52,
+    "medieAdm": 9.02,
+    "rataPromovare": 99.3,
+    "numCandidati": 140,
+    "hasMap": false,
+    "rank": 26
+  },
+  {
+    "nume": "colegiul national ion neculce",
+    "siiir": "4061102201",
+    "medieBac": 8.52,
+    "medieAdm": 9.05,
+    "rataPromovare": 98.4,
+    "numCandidati": 192,
+    "hasMap": false,
+    "rank": 27
+  },
+  {
+    "nume": "colegiul national scoala centrala",
+    "siiir": "4061104022",
+    "medieBac": 8.5,
+    "medieAdm": 8.75,
+    "rataPromovare": 97,
+    "numCandidati": 203,
+    "hasMap": false,
+    "rank": 28
+  },
+  {
+    "nume": "liceul teoretic genesis college",
+    "siiir": "4061205084",
+    "medieBac": 8.43,
+    "medieAdm": null,
+    "rataPromovare": 100,
+    "numCandidati": 14,
+    "hasMap": false,
+    "rank": 29
+  },
+  {
+    "nume": "liceul teoretic bilingv miguel de cervantes",
+    "siiir": "4061103532",
+    "medieBac": 8.43,
+    "medieAdm": 8.47,
+    "rataPromovare": 97,
+    "numCandidati": 99,
+    "hasMap": false,
+    "rank": 30
+  },
+  {
+    "nume": "liceul teoretic mihai ionescu",
+    "siiir": "4061204816",
+    "medieBac": 8.4,
+    "medieAdm": null,
+    "rataPromovare": 100,
+    "numCandidati": 17,
+    "hasMap": false,
+    "rank": 31
+  },
+  {
+    "nume": "colegiul economic nicolae kretzulescu",
+    "siiir": "4061100877",
+    "medieBac": 8.39,
+    "medieAdm": 8.72,
+    "rataPromovare": 100,
+    "numCandidati": 184,
+    "hasMap": false,
+    "rank": 32
+  },
+  {
+    "nume": "liceul teoretic national",
+    "siiir": "4061205491",
+    "medieBac": 8.35,
+    "medieAdm": 5.7,
+    "rataPromovare": 100,
+    "numCandidati": 19,
+    "hasMap": false,
+    "rank": 33
+  },
+  {
+    "nume": "liceul teoretic alexandru vlahuta",
+    "siiir": "4061103401",
+    "medieBac": 8.27,
+    "medieAdm": 8.61,
+    "rataPromovare": 97.8,
+    "numCandidati": 90,
+    "hasMap": false,
+    "rank": 34
+  },
+  {
+    "nume": "liceul teoretic waldorf",
+    "siiir": "4061101037",
+    "medieBac": 8.24,
+    "medieAdm": null,
+    "rataPromovare": 96,
+    "numCandidati": 25,
+    "hasMap": false,
+    "rank": 35
+  },
+  {
+    "nume": "colegiul german goethe",
+    "siiir": "4061101385",
+    "medieBac": 8.24,
+    "medieAdm": 3.96,
+    "rataPromovare": 100,
+    "numCandidati": 53,
+    "hasMap": false,
+    "rank": 36
+  },
+  {
+    "nume": "liceul teoretic ion barbu",
+    "siiir": "4061101887",
+    "medieBac": 8.22,
+    "medieAdm": 8.92,
+    "rataPromovare": 97.7,
+    "numCandidati": 176,
+    "hasMap": false,
+    "rank": 37
+  },
+  {
+    "nume": "liceul teologic adventist stefan demetrescu",
+    "siiir": "4061103966",
+    "medieBac": 8.17,
+    "medieAdm": 8.45,
+    "rataPromovare": 95.1,
+    "numCandidati": 61,
+    "hasMap": false,
+    "rank": 38
+  },
+  {
+    "nume": "liceul teologic baptist logos",
+    "siiir": "4061103609",
+    "medieBac": 8.17,
+    "medieAdm": 7.27,
+    "rataPromovare": 100,
+    "numCandidati": 10,
+    "hasMap": false,
+    "rank": 39
+  },
+  {
+    "nume": "colegiul romano catolic sfantul iosif",
+    "siiir": "4061100669",
+    "medieBac": 8.16,
+    "medieAdm": 8.6,
+    "rataPromovare": 100,
+    "numCandidati": 39,
+    "hasMap": false,
+    "rank": 40
+  },
+  {
+    "nume": "colegiul national victor babes",
+    "siiir": "4061102454",
+    "medieBac": 8.1,
+    "medieAdm": 8.47,
+    "rataPromovare": 97.5,
+    "numCandidati": 162,
+    "hasMap": false,
+    "rank": 41
+  },
+  {
+    "nume": "liceul teoretic c a rosetti",
+    "siiir": "4061100158",
+    "medieBac": 8.03,
+    "medieAdm": 8.97,
+    "rataPromovare": 96.8,
+    "numCandidati": 185,
+    "hasMap": false,
+    "rank": 42
+  },
+  {
+    "nume": "liceul teoretic george calinescu",
+    "siiir": "4061103075",
+    "medieBac": 8.02,
+    "medieAdm": 8.87,
+    "rataPromovare": 92.5,
+    "numCandidati": 168,
+    "hasMap": false,
+    "rank": 43
+  },
+  {
+    "nume": "liceul de coregrafie floria capsali",
+    "siiir": "4061101593",
+    "medieBac": 8.02,
+    "medieAdm": null,
+    "rataPromovare": 86.4,
+    "numCandidati": 22,
+    "hasMap": false,
+    "rank": 43
+  },
+  {
+    "nume": "colegiul national octav onicescu",
+    "siiir": "4061102169",
+    "medieBac": 8,
+    "medieAdm": 8.52,
+    "rataPromovare": 98.1,
+    "numCandidati": 210,
+    "hasMap": false,
+    "rank": 45
+  },
+  {
+    "nume": "colegiul national tudor vladimirescu",
+    "siiir": "4061103179",
+    "medieBac": 7.99,
+    "medieAdm": 8.8,
+    "rataPromovare": 92.8,
+    "numCandidati": 208,
+    "hasMap": false,
+    "rank": 46
+  },
+  {
+    "nume": "colegiul national emil racovita",
+    "siiir": "4061100556",
+    "medieBac": 7.97,
+    "medieAdm": 8.7,
+    "rataPromovare": 94.4,
+    "numCandidati": 89,
+    "hasMap": false,
+    "rank": 47
+  },
+  {
+    "nume": "liceul de arte plastice nicolae tonitza",
+    "siiir": "4061102807",
+    "medieBac": 7.95,
+    "medieAdm": null,
+    "rataPromovare": 90.3,
+    "numCandidati": 165,
+    "hasMap": false,
+    "rank": 48
+  },
+  {
+    "nume": "seminarul teologic ortodox",
+    "siiir": "4061100927",
+    "medieBac": 7.88,
+    "medieAdm": null,
+    "rataPromovare": 95.7,
+    "numCandidati": 24,
+    "hasMap": false,
+    "rank": 49
+  },
+  {
+    "nume": "liceul teoretic ady endre",
+    "siiir": "4061102775",
+    "medieBac": 7.87,
+    "medieAdm": 6.38,
+    "rataPromovare": 100,
+    "numCandidati": 3,
+    "hasMap": false,
+    "rank": 50
+  }
+]

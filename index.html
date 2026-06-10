@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Top Licee Bucuresti</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #0f1117;
+      color: #e1e4ea;
+      min-height: 100vh;
+      padding: 2rem 1rem;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    header h1 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 0.25rem;
+    }
+
+    header p {
+      color: #8b8fa3;
+      font-size: 0.9rem;
+    }
+
+    .controls {
+      display: flex;
+      gap: 0.75rem;
+      margin-bottom: 1.25rem;
+      flex-wrap: wrap;
+    }
+
+    .controls input {
+      background: #1a1d27;
+      border: 1px solid #2a2d3a;
+      color: #e1e4ea;
+      padding: 0.6rem 1rem;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      outline: none;
+      flex: 1;
+      min-width: 180px;
+      transition: border-color 0.2s;
+    }
+
+    .controls input:focus {
+      border-color: #6c63ff;
+    }
+
+    .btn {
+      background: #6c63ff;
+      color: #fff;
+      border: none;
+      padding: 0.6rem 1.5rem;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background 0.2s;
+    }
+
+    .btn:hover { background: #5a52e0; }
+
+    .status {
+      text-align: center;
+      padding: 3rem;
+      color: #8b8fa3;
+      font-size: 1rem;
+    }
+
+    .status.error { color: #ff6b6b; }
+
+    .spinner {
+      display: inline-block;
+      width: 24px;
+      height: 24px;
+      border: 3px solid #2a2d3a;
+      border-top-color: #6c63ff;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin-bottom: 0.75rem;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .table-wrapper {
+      overflow-x: auto;
+      border-radius: 12px;
+      border: 1px solid #2a2d3a;
+      background: #1a1d27;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+    }
+
+    thead {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+    }
+
+    thead th {
+      background: #22253a;
+      padding: 0.75rem 1rem;
+      text-align: left;
+      font-weight: 600;
+      color: #a0a4b8;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      user-select: none;
+      white-space: nowrap;
+      border-bottom: 1px solid #2a2d3a;
+    }
+
+    thead th:hover { color: #fff; }
+    thead th .sort-arrow { margin-left: 0.35rem; font-size: 0.7rem; }
+
+    tbody tr {
+      border-bottom: 1px solid #22253a;
+      transition: background 0.15s;
+    }
+
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: #22253a; }
+
+    tbody td {
+      padding: 0.7rem 1rem;
+      white-space: nowrap;
+    }
+
+    td.rank {
+      font-weight: 700;
+      color: #6c63ff;
+      width: 50px;
+      text-align: center;
+    }
+
+    td.rank.top3 { color: #ffd700; font-size: 1rem; }
+
+    td.name {
+      font-weight: 500;
+      color: #fff;
+      max-width: 320px;
+    }
+
+    td.code {
+      color: #6b6f82;
+      font-family: monospace;
+      font-size: 0.82rem;
+    }
+
+    td.value-high { color: #4ade80; font-weight: 600; }
+    td.value-medium { color: #fbbf24; font-weight: 600; }
+    td.value-low { color: #ff6b6b; font-weight: 600; }
+
+    .badge {
+      display: inline-block;
+      padding: 0.15rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.78rem;
+      font-weight: 600;
+    }
+
+    .badge-yes {
+      background: rgba(74, 222, 128, 0.12);
+      color: #4ade80;
+    }
+
+    .badge-no {
+      background: rgba(139, 143, 163, 0.12);
+      color: #8b8fa3;
+    }
+
+    .info-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 1rem;
+      color: #6b6f82;
+      font-size: 0.82rem;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .legend {
+      display: flex;
+      gap: 1.25rem;
+      flex-wrap: wrap;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.78rem;
+    }
+
+    .legend-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    .dot-green { background: #4ade80; }
+    .dot-yellow { background: #fbbf24; }
+    .dot-red { background: #ff6b6b; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Top Licee Bucuresti</h1>
+      <p>Date din data.json — genereaza cu: node generate.js</p>
+    </header>
+
+    <div class="controls">
+      <input type="text" id="searchInput" placeholder="Cauta liceu dupa nume..." />
+      <input type="text" id="filterInput" placeholder="Filtreaza medie adm (ex: 9.5)..." />
+      <button class="btn" id="resetBtn">Reseteaza</button>
+    </div>
+
+    <div id="app"></div>
+  </div>
+
+  <script>
+    // ===== DATA LOADER =====
+
+    class DataLoader {
+      static async load(path) {
+        const resp = await fetch(path || 'data.json');
+        if (!resp.ok) throw new Error('HTTP ' + resp.status);
+        return await resp.json();
+      }
+    }
+
+    // ===== SCHOOL MODEL =====
+
+    class School {
+      constructor(raw) {
+        this.nume = raw.nume;
+        this.siiir = raw.siiir;
+        this.medieBac = raw.medieBac;
+        this.medieAdm = raw.medieAdm;
+        this.rataPromovare = raw.rataPromovare;
+        this.numCandidati = raw.numCandidati;
+        this.hasMap = raw.hasMap;
+        this.rank = raw.rank;
+      }
+    }
+
+    // ===== LIST MANAGER =====
+
+    class SchoolList {
+      constructor() {
+        this.all = [];
+        this.filtered = [];
+        this.searchQuery = '';
+        this.filterMedie = null;
+        this.sortKey = 'rank';
+        this.sortDir = 'asc';
+      }
+
+      setSchools(rawList) {
+        this.all = rawList.map(r => new School(r));
+        this.applyFilters();
+      }
+
+      setSearch(query) {
+        this.searchQuery = query.toLowerCase().trim();
+        this.applyFilters();
+      }
+
+      setMedieFilter(value) {
+        this.filterMedie = value === '' ? null : parseFloat(value);
+        this.applyFilters();
+      }
+
+      sort(key, dir) {
+        this.sortKey = key;
+        this.sortDir = dir;
+        this.applyFilters();
+      }
+
+      applyFilters() {
+        this.filtered = this.all.filter(s => {
+          if (this.searchQuery && !s.nume.toLowerCase().includes(this.searchQuery)) {
+            return false;
+          }
+          if (this.filterMedie != null && (s.medieAdm == null || s.medieAdm > this.filterMedie)) {
+            return false;
+          }
+          return true;
+        });
+
+        this.filtered.sort((a, b) => {
+          if (this.sortKey === 'nume') {
+            return this.sortDir === 'asc'
+              ? a.nume.localeCompare(b.nume)
+              : b.nume.localeCompare(a.nume);
+          }
+          var va = a[this.sortKey] != null ? a[this.sortKey] : -Infinity;
+          var vb = b[this.sortKey] != null ? b[this.sortKey] : -Infinity;
+          return this.sortDir === 'asc' ? va - vb : vb - va;
+        });
+      }
+
+      reset() {
+        this.searchQuery = '';
+        this.filterMedie = null;
+        this.sortKey = 'rank';
+        this.sortDir = 'asc';
+        this.applyFilters();
+      }
+    }
+
+    // ===== TABLE RENDERER =====
+
+    class TableRenderer {
+      static render(list) {
+        var app = document.getElementById('app');
+        app.innerHTML = '';
+
+        var loading = document.createElement('div');
+        loading.className = 'status';
+        loading.innerHTML = '<div class="spinner"></div>Se incarca datele...';
+        app.appendChild(loading);
+
+        DataLoader.load()
+          .then(function(rawList) {
+            list.setSchools(rawList);
+            loading.remove();
+            TableRenderer.renderTable(list);
+          })
+          .catch(function(err) {
+            loading.className = 'status.error';
+            loading.innerHTML = '<p>Eroare: ' + TableRenderer.escape(err.message) + '</p>';
+          });
+      }
+
+      refresh(list) {
+        var app = document.getElementById('app');
+        var wrapper = app.querySelector('.table-wrapper');
+        if (!wrapper) return;
+
+        var table = wrapper.querySelector('table');
+        if (!table) return;
+
+        var tbody = table.querySelector('tbody');
+        if (!tbody) return;
+
+        var schools = list.filtered;
+        if (!schools.length) {
+          tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:2rem;color:#6b6f82;">Niciun rezultat.</td></tr>';
+          return;
+        }
+
+        var html = TableRenderer.buildBody(schools);
+        tbody.innerHTML = html;
+
+        var infoSpan = app.querySelector('.info-bar span');
+        if (infoSpan) infoSpan.textContent = schools.length + ' licee afisate din ' + list.all.length;
+      }
+
+      static renderTable(list) {
+        var app = document.getElementById('app');
+        app.innerHTML = '';
+
+        var schools = list.filtered;
+        if (!schools.length) {
+          app.innerHTML = '<div class="status">Niciun liceu.</div>';
+          return;
+        }
+
+        var wrapper = document.createElement('div');
+        wrapper.className = 'table-wrapper';
+
+        var table = document.createElement('table');
+        table.innerHTML = TableRenderer.buildHeader(list);
+        table.innerHTML += TableRenderer.buildBody(schools);
+
+        wrapper.appendChild(table);
+        app.appendChild(wrapper);
+
+        var info = document.createElement('div');
+        info.className = 'info-bar';
+        info.innerHTML = '<span>' + schools.length + ' licee afisate din ' + list.all.length + '</span>'
+          + '<div class="legend">'
+            + '<span class="legend-item"><span class="legend-dot dot-green"></span> >= 9.0</span>'
+            + '<span class="legend-item"><span class="legend-dot dot-yellow"></span> 8.0 - 8.99</span>'
+            + '<span class="legend-item"><span class="legend-dot dot-red"></span> < 8.0</span>'
+          + '</div>';
+        app.appendChild(info);
+      }
+
+      static buildHeader(list) {
+        var header = '<thead><tr>';
+        var columns = [
+          { key: 'rank', label: 'Rank' },
+          { key: 'nume', label: 'Liceu' },
+          { key: 'siiir', label: 'SIIIR' },
+          { key: 'medieAdm', label: 'Media Adm.' },
+          { key: 'medieBac', label: 'Media Bac' },
+          { key: 'numCandidati', label: 'Candidati' },
+          { key: 'rataPromovare', label: 'Promovare' },
+          { key: 'hasMap', label: 'Harta' }
+        ];
+        columns.forEach(function(col) {
+          var arrow = '';
+          if (list.sortKey === col.key) {
+            arrow = list.sortDir === 'asc' ? ' \u25B2' : ' \u25BC';
+          }
+          header += '<th data-key="' + col.key + '">' + col.label + arrow + '</th>';
+        });
+        header += '</tr></thead>';
+        return header;
+      }
+
+      static buildBody(schools) {
+        var html = '<tbody>';
+        schools.forEach(function(s, i) {
+          var rankClass = s.rank <= 3 ? 'rank top3' : 'rank';
+          var displayRank = s.rank != null ? s.rank : (i + 1);
+
+          html += '<tr>'
+            + '<td class="' + rankClass + '">' + displayRank + '</td>'
+            + '<td class="name">' + TableRenderer.escape(s.nume) + '</td>'
+            + '<td class="code">' + TableRenderer.escape(s.siiir) + '</td>'
+            + '<td>' + TableRenderer.valueCell(s.medieAdm) + '</td>'
+            + '<td>' + TableRenderer.valueCell(s.medieBac) + '</td>'
+            + '<td>' + (s.numCandidati != null ? s.numCandidati : '\u2014') + '</td>'
+            + '<td>' + (s.rataPromovare != null ? s.rataPromovare + '%' : '\u2014') + '</td>'
+            + '<td>' + (s.hasMap
+                ? '<span class="badge badge-yes">Da</span>'
+                : '<span class="badge badge-no">Nu</span>'
+              ) + '</td>'
+            + '</tr>';
+        });
+        html += '</tbody>';
+        return html;
+      }
+
+      static valueCell(val) {
+        if (val == null) return '<span style="color:#6b6f82">\u2014</span>';
+        var cls = val >= 9 ? 'value-high' : val >= 8 ? 'value-medium' : 'value-low';
+        return '<span class="' + cls + '">' + val.toFixed(3) + '</span>';
+      }
+
+      static escape(str) {
+        var d = document.createElement('div');
+        d.textContent = str;
+        return d.innerHTML;
+      }
+    }
+
+    // ===== APP =====
+
+    class App {
+      constructor() {
+        this.list = new SchoolList();
+      }
+
+      init() {
+        var searchInput = document.getElementById('searchInput');
+        var filterInput = document.getElementById('filterInput');
+        var resetBtn = document.getElementById('resetBtn');
+
+        var self = this;
+        TableRenderer.render(this.list);
+
+        var debounce;
+        searchInput.addEventListener('input', function() {
+          clearTimeout(debounce);
+          debounce = function() {
+            self.list.setSearch(searchInput.value);
+            TableRenderer.refresh(self.list);
+          };
+          setTimeout(debounce, 200);
+        });
+
+        filterInput.addEventListener('input', function() {
+          self.list.setMedieFilter(filterInput.value);
+          TableRenderer.refresh(self.list);
+        });
+
+        resetBtn.addEventListener('click', function() {
+          searchInput.value = '';
+          filterInput.value = '';
+          self.list.reset();
+          TableRenderer.refresh(self.list);
+        });
+
+        document.addEventListener('click', function(e) {
+          var th = e.target.closest('th[data-key]');
+          if (!th) return;
+          var key = th.getAttribute('data-key');
+          if (!key) return;
+          var dir = self.list.sortKey === key && self.list.sortDir === 'asc' ? 'desc' : 'asc';
+          self.list.sort(key, dir);
+          TableRenderer.renderTable(self.list);
+        });
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      var app = new App();
+      app.init();
+    });
+  </script>
+</body>
+</html>
