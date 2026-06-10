@@ -2,6 +2,7 @@ const http = require('http');
 const https = require('https');
 const fs = require('fs');
 const path = require('path');
+const { exec } = require('child_process');
 
 const TOP_URL = 'https://www.bacplus.ro/top-licee/bucuresti';
 const OUTPUT_FILE = path.join(__dirname, 'data.json');
@@ -142,6 +143,32 @@ async function processSchool(school) {
   }
 }
 
+function tryGitPush() {
+  return new Promise((resolve) => {
+    const steps = [
+      { cmd: 'git add .' },
+      { cmd: 'git commit -m "data generation"' },
+      { cmd: 'git push' }
+    ];
+
+    function runStep(index) {
+      if (index >= steps.length) {
+        resolve();
+        return;
+      }
+
+      exec(steps[index].cmd, (err) => {
+        if (err) {
+          console.log('  Git (' + steps[index].cmd + ': ' + err.message);
+        }
+        runStep(index + 1);
+      });
+    }
+
+    runStep(0);
+  });
+}
+
 async function generate() {
   console.log('1. Se descarca lista de licee...');
   const topHtml = await fetchUrl(TOP_URL);
@@ -158,8 +185,20 @@ async function generate() {
     console.log('   Progres: ' + pct + '% (' + (i + batch.length) + '/' + schools.length + ')');
   }
 
+  const generatedAt = new Date().toISOString();
+  schools.generatedAt = generatedAt;
+
   fs.writeFileSync(OUTPUT_FILE, JSON.stringify(schools, null, 2), 'utf-8');
   console.log('\nSalvat ' + schools.length + ' licee in data.json');
+  console.log('Data generarii: ' + new Date(generatedAt).toLocaleString('ro-RO'));
+
+  console.log('3. Se incearca push-ul in Git...');
+  try {
+    await tryGitPush();
+    console.log('  Git push terminat.');
+  } catch (err) {
+    console.log('  Git push a esuat (ignorare non-critica).');
+  }
 }
 
 generate().catch((err) => {
