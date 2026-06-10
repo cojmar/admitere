@@ -451,7 +451,7 @@
         <option value="">Toate profilurile</option>
       </select>
       <input type="text" id="filterInput" placeholder="Medie adm." />
-      <button class="btn btn-reset" id="resetBtn" title="Reseteaza" aria-label="Reseteaza">🔄</button>
+      <button class="btn btn-reset" id="resetBtn" title="Reseteaza" aria-label="Reseteaza">✕</button>
     </div>
 
     <div class="table-wrapper" id="app"></div>
@@ -860,16 +860,18 @@
 
         DataLoader.load()
           .then(function(data) {
+            var schools = Array.isArray(data) ? data : (data.schools || []);
+            var generatedAt = data.generatedAt || (Array.isArray(data) ? null : null);
+
             // Set generation timestamp display
             if (data.generatedAt) {
               var date = new Date(data.generatedAt);
-              var formatted = date.toLocaleDateString('ro-RO', {
-                day: '2-digit',
-                month: '2-digit',
-                year: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
-              });
+              var day = String(date.getDate()).padStart(2, '0');
+              var month = String(date.getMonth() + 1).padStart(2, '0');
+              var year = date.getFullYear();
+              var hours = String(date.getHours()).padStart(2, '0');
+              var minutes = String(date.getMinutes()).padStart(2, '0');
+              var formatted = day + '.' + month + '.' + year + ', ' + hours + ':' + minutes;
               document.getElementById('genInfo').textContent = 'Date generate la data de: ' + formatted;
             } else {
               document.getElementById('genInfo').textContent = 'Date din data.json — generate cu: node generate.js';
@@ -878,7 +880,7 @@
             if (savedSearch) self.list.searchQuery = savedSearch.toLowerCase().trim();
             if (savedMedie) self.list.filterMedie = parseFloat(savedMedie);
             if (savedProfile) self.list.profileFilter = savedProfile;
-            self.list.setSchools(data);
+            self.list.setSchools(schools);
             self._populateProfiles(profileSelect, savedProfile);
             self.list.applyAllFilters();
             self._initTable(searchInput, filterInput, profileSelect);

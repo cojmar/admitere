@@ -186,9 +186,13 @@ async function generate() {
   }
 
   const generatedAt = new Date().toISOString();
-  schools.generatedAt = generatedAt;
 
-  fs.writeFileSync(OUTPUT_FILE, JSON.stringify(schools, null, 2), 'utf-8');
+  const output = {
+    generatedAt: generatedAt,
+    schools: schools
+  };
+
+  fs.writeFileSync(OUTPUT_FILE, JSON.stringify(output, null, 2), 'utf-8');
   console.log('\nSalvat ' + schools.length + ' licee in data.json');
   console.log('Data generarii: ' + new Date(generatedAt).toLocaleString('ro-RO'));
 
