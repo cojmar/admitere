@@ -335,10 +335,14 @@
         return profile.medieAdm <= this.filterMedie;
       }
 
+      profileNameMatchesFilter(profileName) {
+        if (this.profileFilter === '') return true;
+        return profileName.toLowerCase().includes(this.profileFilter.toLowerCase());
+      }
+
       schoolMatchesProfile(school) {
         if (this.profileFilter === '') return true;
         var q = this.profileFilter.toLowerCase();
-        if (school.nume.toLowerCase().includes(q)) return true;
         if (school.profiluri) {
           for (var i = 0; i < school.profiluri.length; i++) {
             if (school.profiluri[i].nume.toLowerCase().includes(q)) return true;
@@ -353,15 +357,71 @@
       }
 
       applyFilters() {
-        this.filtered = this.all.filter(s => {
-          if (this.searchQuery && !s.nume.toLowerCase().includes(this.searchQuery)) {
+        var self = this;
+        this.filtered = this.all.filter(function(s) {
+          if (self.searchQuery && !s.nume.toLowerCase().includes(self.searchQuery)) {
             return false;
           }
-          if (this.filterMedie != null && (s.medieAdm == null || s.medieAdm > this.filterMedie)) {
+          if (self.profileFilter && !self.schoolMatchesProfile(s)) {
             return false;
           }
-          if (!this.schoolMatchesProfile(s)) {
-            return false;
+          if (self.filterMedie != null) {
+            var hasMatchingProfile = false;
+            if (self.profileFilter) {
+              var allMatch = false;
+              var anyHaveMedia = false;
+              if (s.profiluri) {
+                for (var i = 0; i < s.profiluri.length; i++) {
+                  var p = s.profiluri[i];
+                  if (self.profileNameMatchesFilter(p.nume)) {
+                    anyHaveMedia = true;
+                    if (p.medieAdm != null && p.medieAdm <= self.filterMedie) {
+                      hasMatchingProfile = true;
+                    }
+                  }
+                }
+              }
+              if (s.grupuri) {
+                for (var i = 0; i < s.grupuri.length; i++) {
+                  var g = s.grupuri[i];
+                  if (self.profileNameMatchesFilter(g.nume)) {
+                    anyHaveMedia = true;
+                    if (g.medieAdm != null && g.medieAdm <= self.filterMedie) {
+                      hasMatchingProfile = true;
+                    }
+                  }
+                }
+              }
+              if (!anyHaveMedia) {
+                return false;
+              }
+            } else {
+              if (s.medieAdm != null && s.medieAdm > self.filterMedie) {
+                return false;
+              }
+            }
+            if (!hasMatchingProfile && self.filterMedie != null) {
+              var anyMatch = false;
+              if (s.profiluri) {
+                for (var i = 0; i < s.profiluri.length; i++) {
+                  if (s.profiluri[i].medieAdm != null && s.profiluri[i].medieAdm <= self.filterMedie) {
+                    anyMatch = true;
+                    break;
+                  }
+                }
+              }
+              if (!anyMatch && s.grupuri) {
+                for (var i = 0; i < s.grupuri.length; i++) {
+                  if (s.grupuri[i].medieAdm != null && s.grupuri[i].medieAdm <= self.filterMedie) {
+                    anyMatch = true;
+                    break;
+                  }
+                }
+              }
+              if (!anyMatch) {
+                return false;
+              }
+            }
           }
           return true;
         });
@@ -605,8 +665,10 @@
           .then(function(data) {
             self.list.setSchools(data);
             self._populateProfiles(profileSelect, savedProfile);
-            if (savedProfile) {
-              self.list.setProfileFilter(savedProfile);
+            if (savedSearch) self.list.setSearch(savedSearch);
+            if (savedMedie) self.list.setMedieFilter(savedMedie);
+            if (savedProfile) self.list.setProfileFilter(savedProfile);
+            if (savedSearch || savedMedie || savedProfile) {
               self._refresh(searchInput, filterInput, profileSelect);
             }
           });
@@ -664,8 +726,6 @@
       }
 
       _refresh(searchInput, filterInput, profileSelect) {
-        searchInput.value = this.list.searchQuery;
-        filterInput.value = this.list.filterMedie != null ? this.list.filterMedie.toString() : '';
         profileSelect.value = this.list.profileFilter;
         TableRenderer.refresh(this.list);
       }
