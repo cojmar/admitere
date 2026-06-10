@@ -497,13 +497,15 @@
         }
 
         var table = document.createElement('table');
-        table.innerHTML = TableRenderer.buildHeader(list);
-        table.innerHTML += '<tbody>';
+        var thead = document.createElement('thead');
+        thead.innerHTML = TableRenderer.buildHeader(list);
+        table.appendChild(thead);
+        var tbody = document.createElement('tbody');
         schools.forEach(function(s) {
-          table.innerHTML += TableRenderer.buildSchoolRow(s);
-          table.innerHTML += TableRenderer.buildSchoolBody(s, list);
+          tbody.innerHTML += TableRenderer.buildSchoolRow(s);
+          tbody.innerHTML += TableRenderer.buildSchoolBody(s, list);
         });
-        table.innerHTML += '</tbody>';
+        table.appendChild(tbody);
 
         app.appendChild(table);
 
