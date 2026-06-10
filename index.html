@@ -97,54 +97,90 @@
 
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    .table-wrapper {
-      overflow-x: auto;
-      border-radius: 12px;
-      border: 1px solid #2a2d3a;
-      background: #1a1d27;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.88rem;
-    }
-
-    thead {
-      position: sticky;
-      top: 0;
-      z-index: 2;
-    }
-
-    thead th {
-      background: #22253a;
-      padding: 0.75rem 1rem;
-      text-align: left;
-      font-weight: 600;
-      color: #a0a4b8;
-      font-size: 0.78rem;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
+    .school-row {
       cursor: pointer;
       user-select: none;
-      white-space: nowrap;
-      border-bottom: 1px solid #2a2d3a;
-    }
-
-    thead th:hover { color: #fff; }
-    thead th .sort-arrow { margin-left: 0.35rem; font-size: 0.7rem; }
-
-    tbody tr {
-      border-bottom: 1px solid #22253a;
       transition: background 0.15s;
     }
 
-    tbody tr:last-child { border-bottom: none; }
-    tbody tr:hover { background: #22253a; }
+    .school-row:hover {
+      background: #22253a !important;
+    }
 
-    tbody td {
-      padding: 0.7rem 1rem;
-      white-space: nowrap;
+    .school-row .arrow {
+      transition: transform 0.2s;
+      display: inline-block;
+    }
+
+    .school-row .arrow.open {
+      transform: rotate(90deg);
+    }
+
+    .school-header td {
+      padding: 0.85rem 1rem;
+      border-bottom: 2px solid #2a2d3a;
+    }
+
+    .school-body {
+      display: none;
+    }
+
+    .school-body.open {
+      display: table-row;
+    }
+
+    .school-body-inner {
+      padding: 1rem 1rem 1rem 3rem;
+      background: #151720;
+      border-bottom: 1px solid #2a2d3a;
+    }
+
+    .section-title {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #6c63ff;
+      margin-bottom: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .sub-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .sub-table th {
+      background: #1e2136;
+      padding: 0.6rem 0.8rem;
+      text-align: left;
+      font-weight: 600;
+      color: #a0a4b8;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      border-bottom: 1px solid #2a2d3a;
+    }
+
+    .sub-table td {
+      padding: 0.55rem 0.8rem;
+      border-bottom: 1px solid #1e2136;
+    }
+
+    .sub-table tbody tr:hover {
+      background: #1a1d27;
+    }
+
+    .badge-group {
+      display: inline-block;
+      background: rgba(108, 99, 255, 0.15);
+      color: #6c63ff;
+      padding: 0.2rem 0.6rem;
+      border-radius: 4px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
     }
 
     td.rank {
@@ -159,7 +195,7 @@
     td.name {
       font-weight: 500;
       color: #fff;
-      max-width: 320px;
+      max-width: 350px;
     }
 
     td.code {
@@ -171,24 +207,6 @@
     td.value-high { color: #4ade80; font-weight: 600; }
     td.value-medium { color: #fbbf24; font-weight: 600; }
     td.value-low { color: #ff6b6b; font-weight: 600; }
-
-    .badge {
-      display: inline-block;
-      padding: 0.15rem 0.5rem;
-      border-radius: 4px;
-      font-size: 0.78rem;
-      font-weight: 600;
-    }
-
-    .badge-yes {
-      background: rgba(74, 222, 128, 0.12);
-      color: #4ade80;
-    }
-
-    .badge-no {
-      background: rgba(139, 143, 163, 0.12);
-      color: #8b8fa3;
-    }
 
     .info-bar {
       display: flex;
@@ -238,7 +256,7 @@
       <button class="btn" id="resetBtn">Reseteaza</button>
     </div>
 
-    <div id="app"></div>
+    <div class="table-wrapper" id="app"></div>
   </div>
 
   <script>
@@ -262,8 +280,9 @@
         this.medieAdm = raw.medieAdm;
         this.rataPromovare = raw.rataPromovare;
         this.numCandidati = raw.numCandidati;
-        this.hasMap = raw.hasMap;
         this.rank = raw.rank;
+        this.grupuri = (raw.profiluri && raw.profiluri.grupuri) || [];
+        this.profiluri = (raw.profiluri && raw.profiluri.profiluri) || [];
       }
     }
 
@@ -277,6 +296,7 @@
         this.filterMedie = null;
         this.sortKey = 'rank';
         this.sortDir = 'asc';
+        this.expandedSchools = new Set();
       }
 
       setSchools(rawList) {
@@ -330,6 +350,18 @@
         this.sortDir = 'asc';
         this.applyFilters();
       }
+
+      toggleSchool(id) {
+        if (this.expandedSchools.has(id)) {
+          this.expandedSchools.delete(id);
+        } else {
+          this.expandedSchools.add(id);
+        }
+      }
+
+      isExpanded(id) {
+        return this.expandedSchools.has(id);
+      }
     }
 
     // ===== TABLE RENDERER =====
@@ -358,10 +390,7 @@
 
       static refresh(list) {
         var app = document.getElementById('app');
-        var wrapper = app.querySelector('.table-wrapper');
-        if (!wrapper) return;
-
-        var table = wrapper.querySelector('table');
+        var table = app.querySelector('table');
         if (!table) return;
 
         var tbody = table.querySelector('tbody');
@@ -373,7 +402,13 @@
           return;
         }
 
-        var html = TableRenderer.buildBody(schools);
+        var html = '';
+        schools.forEach(function(s) {
+          html += TableRenderer.buildSchoolRow(s);
+          if (list.isExpanded(s.rank)) {
+            html += TableRenderer.buildSchoolBody(s);
+          }
+        });
         tbody.innerHTML = html;
 
         var infoSpan = app.querySelector('.info-bar span');
@@ -390,15 +425,18 @@
           return;
         }
 
-        var wrapper = document.createElement('div');
-        wrapper.className = 'table-wrapper';
-
         var table = document.createElement('table');
         table.innerHTML = TableRenderer.buildHeader(list);
-        table.innerHTML += TableRenderer.buildBody(schools);
+        table.innerHTML += '<tbody>';
+        schools.forEach(function(s) {
+          table.innerHTML += TableRenderer.buildSchoolRow(s);
+          if (list.isExpanded(s.rank)) {
+            table.innerHTML += TableRenderer.buildSchoolBody(s);
+          }
+        });
+        table.innerHTML += '</tbody>';
 
-        wrapper.appendChild(table);
-        app.appendChild(wrapper);
+        app.appendChild(table);
 
         var info = document.createElement('div');
         info.className = 'info-bar';
@@ -418,10 +456,8 @@
           { key: 'nume', label: 'Liceu' },
           { key: 'siiir', label: 'SIIIR' },
           { key: 'medieAdm', label: 'Media Adm.' },
-          { key: 'medieBac', label: 'Media Bac' },
           { key: 'numCandidati', label: 'Candidati' },
-          { key: 'rataPromovare', label: 'Promovare' },
-          { key: 'hasMap', label: 'Harta' }
+          { key: 'rataPromovare', label: 'Promovare' }
         ];
         columns.forEach(function(col) {
           var arrow = '';
@@ -434,27 +470,72 @@
         return header;
       }
 
-      static buildBody(schools) {
-        var html = '<tbody>';
-        schools.forEach(function(s, i) {
-          var rankClass = s.rank <= 3 ? 'rank top3' : 'rank';
-          var displayRank = s.rank != null ? s.rank : (i + 1);
+      static buildSchoolRow(s) {
+        var rankClass = s.rank <= 3 ? 'rank top3' : 'rank';
+        var displayRank = s.rank != null ? s.rank : '—';
+        var arrowClass = 'arrow';
+        var arrowChar = '\u25B6';
 
-          html += '<tr>'
-            + '<td class="' + rankClass + '">' + displayRank + '</td>'
-            + '<td class="name">' + TableRenderer.escape(s.nume) + '</td>'
-            + '<td class="code">' + TableRenderer.escape(s.siiir) + '</td>'
-            + '<td>' + TableRenderer.valueCell(s.medieAdm) + '</td>'
-            + '<td>' + TableRenderer.valueCell(s.medieBac) + '</td>'
-            + '<td>' + (s.numCandidati != null ? s.numCandidati : '\u2014') + '</td>'
-            + '<td>' + (s.rataPromovare != null ? s.rataPromovare + '%' : '\u2014') + '</td>'
-            + '<td>' + (s.hasMap
-                ? '<span class="badge badge-yes">Da</span>'
-                : '<span class="badge badge-no">Nu</span>'
-              ) + '</td>'
-            + '</tr>';
-        });
-        html += '</tbody>';
+        return '<tr class="school-row school-header" data-id="' + s.rank + '">'
+          + '<td class="' + rankClass + '"><span class="' + arrowClass + '">' + arrowChar + '</span> ' + displayRank + '</td>'
+          + '<td class="name">' + TableRenderer.escape(s.nume) + '</td>'
+          + '<td class="code">' + TableRenderer.escape(s.siiir) + '</td>'
+          + '<td>' + TableRenderer.valueCell(s.medieAdm) + '</td>'
+          + '<td>' + (s.numCandidati != null ? s.numCandidati : '\u2014') + '</td>'
+          + '<td>' + (s.rataPromovare != null ? s.rataPromovare + '%' : '\u2014') + '</td>'
+          + '<td></td>'
+          + '</tr>';
+      }
+
+      static buildSchoolBody(s) {
+        var html = '<tr class="school-body open"><td colspan="7" style="padding:0;">';
+        html += '<div class="school-body-inner">';
+
+        // Grupuri section
+        if (s.grupuri.length > 0) {
+          html += '<div class="section-title">Grupuri principale</div>';
+          html += '<table class="sub-table"><thead><tr>';
+          html += '<th>Grup</th>';
+          html += '<th>Media Adm.</th>';
+          html += '<th>Locuri</th>';
+          html += '</tr></thead><tbody>';
+          s.grupuri.forEach(function(g) {
+            html += '<tr>';
+            html += '<td><span class="badge-group">' + TableRenderer.escape(g.nume) + '</span></td>';
+            html += '<td>' + TableRenderer.valueCell(g.medieAdm) + '</td>';
+            html += '<td>' + (g.locuri != null ? g.locuri : '\u2014') + '</td>';
+            html += '</tr>';
+          });
+          html += '</tbody></table>';
+        }
+
+        // Profiluri section
+        if (s.profiluri.length > 0) {
+          html += '<div class="section-title" style="margin-top:1.5rem;">Profiluri si specializari</div>';
+          html += '<table class="sub-table"><thead><tr>';
+          html += '<th>Profil</th>';
+          html += '<th>Media Adm.</th>';
+          html += '<th>Locuri</th>';
+          html += '<th>Grupuri</th>';
+          html += '</tr></thead><tbody>';
+          s.profiluri.forEach(function(p) {
+            var grupeHtml = '';
+            if (p.grupe && p.grupe.length > 0) {
+              grupeHtml = p.grupe.map(function(g) {
+                return g.grupa + ' (' + g.medieAdm + ')';
+              }).join(', ');
+            }
+            html += '<tr>';
+            html += '<td>' + TableRenderer.escape(p.nume) + '</td>';
+            html += '<td>' + TableRenderer.valueCell(p.medieAdm) + '</td>';
+            html += '<td>' + (p.locuri != null ? p.locuri : '\u2014') + '</td>';
+            html += '<td style="font-size:0.8rem;color:#6b6f82;">' + TableRenderer.escape(grupeHtml) + '</td>';
+            html += '</tr>';
+          });
+          html += '</tbody></table>';
+        }
+
+        html += '</div></td></tr>';
         return html;
       }
 
@@ -482,8 +563,8 @@
         var searchInput = document.getElementById('searchInput');
         var filterInput = document.getElementById('filterInput');
         var resetBtn = document.getElementById('resetBtn');
-
         var self = this;
+
         TableRenderer.render(this.list);
 
         var debounce;
@@ -509,13 +590,23 @@
         });
 
         document.addEventListener('click', function(e) {
+          var schoolRow = e.target.closest('.school-row');
+          if (schoolRow) {
+            var id = parseInt(schoolRow.getAttribute('data-id'));
+            self.list.toggleSchool(id);
+            TableRenderer.refresh(self.list);
+            return;
+          }
+
           var th = e.target.closest('th[data-key]');
-          if (!th) return;
-          var key = th.getAttribute('data-key');
-          if (!key) return;
-          var dir = self.list.sortKey === key && self.list.sortDir === 'asc' ? 'desc' : 'asc';
-          self.list.sort(key, dir);
-          TableRenderer.renderTable(self.list);
+          if (th) {
+            var key = th.getAttribute('data-key');
+            if (key) {
+              var dir = self.list.sortKey === key && self.list.sortDir === 'asc' ? 'desc' : 'asc';
+              self.list.sort(key, dir);
+              TableRenderer.renderTable(self.list);
+            }
+          }
         });
       }
     }
