@@ -97,36 +97,9 @@
 
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    .school-row {
-      cursor: pointer;
-      user-select: none;
-      transition: background 0.15s;
-    }
-
-    .school-row:hover {
-      background: #22253a !important;
-    }
-
-    .school-row .arrow {
-      transition: transform 0.2s;
-      display: inline-block;
-    }
-
-    .school-row .arrow.open {
-      transform: rotate(90deg);
-    }
-
     .school-header td {
       padding: 0.85rem 1rem;
       border-bottom: 2px solid #2a2d3a;
-    }
-
-    .school-body {
-      display: none;
-    }
-
-    .school-body.open {
-      display: table-row;
     }
 
     .school-body-inner {
@@ -241,6 +214,14 @@
     .dot-green { background: #4ade80; }
     .dot-yellow { background: #fbbf24; }
     .dot-red { background: #ff6b6b; }
+
+    .highlight-green {
+      background: rgba(74, 222, 128, 0.1);
+    }
+
+    .highlight-green td {
+      color: #4ade80;
+    }
   </style>
 </head>
 <body>
@@ -296,7 +277,6 @@
         this.filterMedie = null;
         this.sortKey = 'rank';
         this.sortDir = 'asc';
-        this.expandedSchools = new Set();
       }
 
       setSchools(rawList) {
@@ -351,16 +331,10 @@
         this.applyFilters();
       }
 
-      toggleSchool(id) {
-        if (this.expandedSchools.has(id)) {
-          this.expandedSchools.delete(id);
-        } else {
-          this.expandedSchools.add(id);
-        }
-      }
-
-      isExpanded(id) {
-        return this.expandedSchools.has(id);
+      profileMatchesFilter(profile) {
+        if (this.filterMedie == null) return false;
+        if (profile.medieAdm == null) return false;
+        return profile.medieAdm <= this.filterMedie;
       }
     }
 
@@ -405,9 +379,7 @@
         var html = '';
         schools.forEach(function(s) {
           html += TableRenderer.buildSchoolRow(s);
-          if (list.isExpanded(s.rank)) {
-            html += TableRenderer.buildSchoolBody(s);
-          }
+          html += TableRenderer.buildSchoolBody(s, list);
         });
         tbody.innerHTML = html;
 
@@ -430,9 +402,7 @@
         table.innerHTML += '<tbody>';
         schools.forEach(function(s) {
           table.innerHTML += TableRenderer.buildSchoolRow(s);
-          if (list.isExpanded(s.rank)) {
-            table.innerHTML += TableRenderer.buildSchoolBody(s);
-          }
+          table.innerHTML += TableRenderer.buildSchoolBody(s, list);
         });
         table.innerHTML += '</tbody>';
 
@@ -473,11 +443,9 @@
       static buildSchoolRow(s) {
         var rankClass = s.rank <= 3 ? 'rank top3' : 'rank';
         var displayRank = s.rank != null ? s.rank : '—';
-        var arrowClass = 'arrow';
-        var arrowChar = '\u25B6';
 
-        return '<tr class="school-row school-header" data-id="' + s.rank + '">'
-          + '<td class="' + rankClass + '"><span class="' + arrowClass + '">' + arrowChar + '</span> ' + displayRank + '</td>'
+        return '<tr class="school-row school-header">'
+          + '<td class="' + rankClass + '"> ' + displayRank + '</td>'
           + '<td class="name">' + TableRenderer.escape(s.nume) + '</td>'
           + '<td class="code">' + TableRenderer.escape(s.siiir) + '</td>'
           + '<td>' + TableRenderer.valueCell(s.medieAdm) + '</td>'
@@ -487,8 +455,8 @@
           + '</tr>';
       }
 
-      static buildSchoolBody(s) {
-        var html = '<tr class="school-body open"><td colspan="7" style="padding:0;">';
+      static buildSchoolBody(s, list) {
+       var html = '<tr><td colspan="7" style="padding:0;">';
         html += '<div class="school-body-inner">';
 
         // Grupuri section
@@ -500,7 +468,9 @@
           html += '<th>Locuri</th>';
           html += '</tr></thead><tbody>';
           s.grupuri.forEach(function(g) {
-            html += '<tr>';
+            var isMatch = list.profileMatchesFilter(g);
+            var rowClass = isMatch ? 'highlight-green' : '';
+            html += '<tr class="' + rowClass + '">';
             html += '<td><span class="badge-group">' + TableRenderer.escape(g.nume) + '</span></td>';
             html += '<td>' + TableRenderer.valueCell(g.medieAdm) + '</td>';
             html += '<td>' + (g.locuri != null ? g.locuri : '\u2014') + '</td>';
@@ -519,13 +489,15 @@
           html += '<th>Grupuri</th>';
           html += '</tr></thead><tbody>';
           s.profiluri.forEach(function(p) {
+            var isMatch = list.profileMatchesFilter(p);
+            var rowClass = isMatch ? 'highlight-green' : '';
             var grupeHtml = '';
             if (p.grupe && p.grupe.length > 0) {
               grupeHtml = p.grupe.map(function(g) {
                 return g.grupa + ' (' + g.medieAdm + ')';
               }).join(', ');
             }
-            html += '<tr>';
+            html += '<tr class="' + rowClass + '">';
             html += '<td>' + TableRenderer.escape(p.nume) + '</td>';
             html += '<td>' + TableRenderer.valueCell(p.medieAdm) + '</td>';
             html += '<td>' + (p.locuri != null ? p.locuri : '\u2014') + '</td>';
@@ -590,14 +562,6 @@
         });
 
         document.addEventListener('click', function(e) {
-          var schoolRow = e.target.closest('.school-row');
-          if (schoolRow) {
-            var id = parseInt(schoolRow.getAttribute('data-id'));
-            self.list.toggleSchool(id);
-            TableRenderer.refresh(self.list);
-            return;
-          }
-
           var th = e.target.closest('th[data-key]');
           if (th) {
             var key = th.getAttribute('data-key');
